@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログインタイトル</title>
+</head>
+<body>
+    <div class="login-container">
+        <h2>ログイン</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+            <input type="text" name="username" placeholder="ユーザー名" formControlName = "id">
+            <input type="password" name="password" placeholder="パスワード"  formControlName = "pass">
+            <input type="submit" value="ログイン">
+        </form>
+    </div>
+</body>
+<div class="error-popup" *ngIf="showError">
+    {{ errorMessage }}
+  </div>
+</html>
