@@ -1,25 +1,86 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import {  FormBuilder, FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Component, NgModule, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+interface TodoItem {
+  title: string;
+  description: string;
+  isComplete: boolean;
+  date: string;
+}
 
 @Component({
   selector: 'app-home',
-  standalone: true,
-  imports: [CommonModule, FormsModule,ReactiveFormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+  ],
+  standalone: true,
+  providers: [
+    FormBuilder
+  ]
 })
-export class HomeComponent {
-  loginForm: FormGroup;
+export class HomeComponent implements OnInit {
+
+  // 詳細が表示されているか
+  public hasDetail = false;
+
+  // アイテムリスト
+  public itemList: Array<TodoItem> = new Array<TodoItem>();
+
+  // 入力フォーム
+  public todoForm!: FormGroup;
+
   constructor(
-    private http: HttpClient,
-    private fb: FormBuilder
-  ) {
-    this.loginForm = this.fb.group({
+    protected formBuilder: FormBuilder
+  ) { }
+
+  ngOnInit() {
+    this.createForm();
+  }
+
+  createForm(): void {
+    // Form の作成と初期値設定をします。
+    this.todoForm = this.formBuilder.group({
+      title: ['',
+        [
+          Validators.required
+        ]
+      ],
+      description: [''],
+      date: [''],
+      isComplete: [false]
     });
   }
-  ngOnInit() {}
+
+  // todoItem を 保存します
+  onSaveTodoItem(): void {
+    const item: TodoItem = {
+      title: this.todoForm.get('title')!.value,
+      isComplete: false,
+      description: '',
+      date: ''
+    };
+
+    if (this.hasDetail) {
+      item.description = this.todoForm.get('description')!.value;
+      item.date = this.todoForm.get('date')!.value;
+    }
+
+    this.itemList.push(item);
+    this.clearForm();
+    console.log(this.itemList);
+  }
+
+  // フォームの値をリセット
+  clearForm(): void {
+    this.todoForm.reset();
+  }
+
+  // 指定した要素を削除
+  onDeleteItem(index: number): void {
+    this.itemList.splice(index, 1);
+  }
 }
