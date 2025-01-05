@@ -27,6 +27,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/mockServiceWorker.js",
+              "src/favicon.ico",
               {
                 "glob": "**/*",
                 "input": "public"
