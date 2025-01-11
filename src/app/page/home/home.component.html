@@ -1,13 +1,52 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <div class="login-container">
-        <h2>ホーム画面だよ</h2>
+<h1>パスワード管理</h1>
+<h3>新規パスワード</h3>
+<form [formGroup]="passwordForm">
+  <div class="card card-block card-header">
+    <div class="form-group registItemArea">
+      <div class="d-flex flex-row mb-3">
+        <div>
+          <input id="storageInfoName" class="form-control" placeholder="名称" formControlName="storageInfoName" />
+        </div>
+        <div>
+          <input id="storageInfoPass" class="form-control" placeholder="パスワード" formControlName="storageInfoPass" />
+        </div>
+        <div class="flex-fill">
+          <input id="storageInfoMemo" class="form-control" placeholder="メモ" formControlName="storageInfoMemo" />
+        </div>
+        <div>
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit" (click)="registStorageInfo()"
+              [disabled]="this.passwordForm.invalid">保存</button>
+          </span>
+        </div>
+      </div>
     </div>
-</body>
-</html>
+  </div>
+</form>
+
+<h3>パスワード一覧</h3>
+<div class="form-group registItemArea">
+  @for (item of this.oGetStorageInfoList.storageInfoList; track $index) {
+  <div class="card card-block card-header">
+    <div class="d-flex flex-row mb-3">
+      <div class="flex-fill">
+        {{item.storageInfoName}}
+      </div>
+      <div class="flex-fill">
+        {{item.storageInfoPass}}
+      </div>
+      <div class="flex-fill">
+        {{item.storageInfoMemo}}
+      </div>
+      <div>
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="button" (click)="getStorageInfoList()">保存</button>
+        </span>
+        <span class="input-group-btn">
+          <button class="btn btn-danger" type="button" (click)="getStorageInfoList()">削除</button>
+        </span>
+      </div>
+    </div>
+  </div>
+  }
+</div>
