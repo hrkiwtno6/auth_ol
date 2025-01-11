@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import {  FormBuilder, FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
-
+import { LoginService } from '../../services/login.service';
+import { CookieService } from 'ngx-cookie-service';
+import { ILogin } from 'c:/source/auth_ol/src/app/models/login.model';
 
 @Component({
     selector: 'app-login',
@@ -14,57 +15,51 @@ import { catchError, Observable, throwError } from 'rxjs';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  iLogin!: ILogin;
   router=inject(Router);
   route=inject(ActivatedRoute);
+  oLogin!: import("c:/source/auth_ol/src/app/models/login.model").OLogin;
+
   constructor(
-    private http: HttpClient,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private loginService: LoginService,
+    private cookieService: CookieService
   ) {
     this.loginForm = this.fb.group({
-      id: ['', [Validators.required, Validators.minLength(10)]],
-      pass: ['', Validators.required]
+      loginId: ['', [Validators.required, Validators.minLength(10)]],
+      loginPw: ['', Validators.required]
     });
   }
   ngOnInit() {}
   errorMessage: string = '';
   showError: boolean = false;
-  sendRequest(data: { id: string, pass: string }): Observable<any> {  
-    //ログインAPIをコールするためにサーバ側でスタブみたいなの作ってみる。
-    return this.http.post('/api/login', data)
-    .pipe(catchError(this.handleError));
-    // リバプロで同一ドメインを防がないといけない。
-  }
+
   submit() {
-    this.sendRequest({id:this.loginForm.get("id")!.value, pass:this.loginForm.get("pass")!.value}).subscribe({
-      next: (response) => {
-        // 成功時（200）の処理
-        console.log('Login successful');
-        this.router.navigate(['/home'],{relativeTo: this.route});
+    // this.iLogin = {
+    //   loginId: this.loginForm.value.loginId,
+    //   loginPw: this.loginForm.value.loginPw
+    // }
+    // this.loginService.login(this.iLogin).subscribe({
+    this.loginService.login(this.loginForm.getRawValue()).subscribe({
+      next: (res) => {
+        this.cookieService.set('groupId', this.loginForm.value.loginId);
+        // this.cookieService.set('groupId', res.groupId);
+        this.router.navigate(['/home']);
       },
-      error: (error) => {
-        // エラー時の処理
-        this.errorMessage = error.message;
-        this.showError = true;
-        
-        // ポップアップを表示（例: 5秒後に消える）
-        setTimeout(() => {
-          this.showError = false;
-        }, 10000);
+      error: (err: HttpErrorResponse) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 401) {
+            this.showError = true;
+            this.errorMessage = 'ログインIDまたはパスワードが間違っています。';
+          } else if (err.status !== 200) {
+            this.showError = true;
+            this.errorMessage = 'ログインに失敗しました。';
+          } else {
+            console.error('Unexpected error:', err);
+          }
+        }
       }
     });
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = '';
-
-    switch (error.status) {
-      case 401:
-        errorMessage = 'IDまたはパスワードが違います';
-        break;
-      default:
-        errorMessage = '予期せぬエラーが発生しました';
-        break;  
-    }
-    return throwError(() => ({ status: error.status, message: errorMessage }));
-  }
 }

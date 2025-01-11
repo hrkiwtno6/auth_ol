@@ -1,7 +1,8 @@
 export interface IGetStorageInfoList {
+  groupId: string;
 }
 
-export interface storageInfo {
+export interface StorageInfo {
   storageInfoId: string;
   groupId: string;
   storageInfoName: string;
@@ -10,6 +11,6 @@ export interface storageInfo {
 }
 
 export interface OGetStorageInfoList {
-  storageInfoList: Array<storageInfo>;
+  storageInfoList: Array<StorageInfo>;
 }
 
