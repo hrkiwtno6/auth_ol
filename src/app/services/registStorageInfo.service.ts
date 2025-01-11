@@ -10,7 +10,7 @@ export class RegistStorageInfoService {
 
   constructor(private http: HttpClient) { }
 
-  registStorageInfoList(param: IRegistStorageInfo): Observable<ORegistStorageInfo> {
-    return this.http.post<ORegistStorageInfo>("/api/registInfo", param);
+  registStorageInfo(param: IRegistStorageInfo): Observable<ORegistStorageInfo> {
+    return this.http.post<ORegistStorageInfo>("/api/registStorageInfo", param);
   }
 }

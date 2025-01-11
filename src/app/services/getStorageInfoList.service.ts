@@ -11,7 +11,6 @@ export class GetStorageInfoListService {
   constructor(private http: HttpClient) { }
 
   getStorageInfoList(param: IGetStorageInfoList): Observable<OGetStorageInfoList> {
-    return this.http.post<OGetStorageInfoList>("/api/search", param);
-    // return this.http.post<OGetStorageInfoList>("/api/getStorageInfoList", param);
+    return this.http.post<OGetStorageInfoList>("/api/getStorageInfoList", param);
   }
 }

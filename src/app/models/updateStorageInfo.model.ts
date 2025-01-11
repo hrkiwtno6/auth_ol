@@ -7,4 +7,5 @@ export interface IUpdateStorageInfo {
 }
 
 export interface OUpdateStorageInfo {
+  storageInfoId: string;
 }
