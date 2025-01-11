@@ -5,7 +5,7 @@ import {  FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} 
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ILogin } from 'c:/source/auth_ol/src/app/models/login.model';
+import { ILogin, OLogin } from '../../models/login.model';
 
 @Component({
     selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginComponent {
   iLogin!: ILogin;
   router=inject(Router);
   route=inject(ActivatedRoute);
-  oLogin!: import("c:/source/auth_ol/src/app/models/login.model").OLogin;
+  oLogin!: OLogin;
 
   constructor(
     private fb: FormBuilder,
@@ -35,14 +35,8 @@ export class LoginComponent {
   showError: boolean = false;
 
   submit() {
-    // this.iLogin = {
-    //   loginId: this.loginForm.value.loginId,
-    //   loginPw: this.loginForm.value.loginPw
-    // }
-    // this.loginService.login(this.iLogin).subscribe({
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: (res) => {
-        // this.cookieService.set('groupId', this.loginForm.value.loginId);
         this.cookieService.set('groupId', res.userId);
         this.router.navigate(['/home']);
       },
