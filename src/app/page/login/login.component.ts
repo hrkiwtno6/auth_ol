@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import {  FormBuilder, FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -42,8 +42,8 @@ export class LoginComponent {
     // this.loginService.login(this.iLogin).subscribe({
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: (res) => {
-        this.cookieService.set('groupId', this.loginForm.value.loginId);
-        // this.cookieService.set('groupId', res.groupId);
+        // this.cookieService.set('groupId', this.loginForm.value.loginId);
+        this.cookieService.set('groupId', res.userId);
         this.router.navigate(['/home']);
       },
       error: (err: HttpErrorResponse) => {

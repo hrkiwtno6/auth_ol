@@ -5,13 +5,16 @@
     <div class="form-group registItemArea">
       <div class="d-flex flex-row mb-3">
         <div>
-          <input id="storageInfoName" class="form-control" placeholder="名称" formControlName="storageInfoName" />
+          <input type="text" id="storageInfoName" class="form-control" placeholder="名称"
+            formControlName="storageInfoName" />
         </div>
         <div>
-          <input id="storageInfoPass" class="form-control" placeholder="パスワード" formControlName="storageInfoPass" />
+          <input type="text" id="storageInfoPass" class="form-control" placeholder="パスワード"
+            formControlName="storageInfoPass" />
         </div>
         <div class="flex-fill">
-          <input id="storageInfoMemo" class="form-control" placeholder="メモ" formControlName="storageInfoMemo" />
+          <input type="text" id="storageInfoMemo" class="form-control" placeholder="メモ"
+            formControlName="storageInfoMemo" />
         </div>
         <div>
           <span class="input-group-btn">
@@ -27,26 +30,38 @@
 <h3>パスワード一覧</h3>
 <form [formGroup]="passwordListForm">
   @for (item of passwordListFormGroupArray; track $index) {
-    <div class="card card-block card-header">
-      <div class="d-flex flex-row mb-3" [formGroup]="item">
-        <div class="flex-fill">
-          {{item.controls['storageInfoName'].value}}
+  <div class="card card-block card-header">
+    <form [formGroup]="item">
+      <div class="d-flex flex-row mb-3">
+        <div>
+          <input type="text" id="storageInfoName" class="form-control" placeholder="名称"
+            formControlName="storageInfoName" [disabled]="!canEdit" />
+        </div>
+        <div>
+          <input type="text" id="storageInfoPass" class="form-control" placeholder="パスワード"
+            formControlName="storageInfoPass" [disabled]="!item.get('isEditable')?.value" />
         </div>
         <div class="flex-fill">
-          {{item.controls['storageInfoPass'].value}}
-        </div>
-        <div class="flex-fill">
-          {{item.controls['storageInfoMemo'].value}}
+          <input type="text" id="storageInfoMemo" class="form-control" placeholder="メモ"
+            formControlName="storageInfoMemo" [disabled]="!item.get('isEditable')?.value" />
         </div>
         <div>
           <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" (click)="getStorageInfoList()">更新</button>
+            <button class="btn btn-primary" type="button" (click)="updateStorageInfo($index)" [disabled]="!item.dirty||item.invalid">更新</button>
           </span>
-          <span class="input-group-btn">
-            <button class="btn btn-danger" type="button" (click)="getStorageInfoList()">削除</button>
-          </span>
+          @if ( !item.dirty || item.invalid ) {
+            <span class="input-group-btn">
+              <button class="btn btn-danger" type="button" (click)="deleteStorageInfo($index)">削除</button>
+            </span>
+          }
+          @else {
+            <span class="input-group-btn">
+              <button class="btn btn-outline-secondary" type="button" (click)="getStorageInfoList()">取消</button>
+            </span>
+          }
         </div>
       </div>
-    </div>
-    }
+    </form>
+  </div>
+  }
 </form>
