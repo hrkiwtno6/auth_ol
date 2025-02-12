@@ -38,6 +38,7 @@ export class LoginComponent {
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: (res) => {
         this.cookieService.set('groupId', res.userId);
+        this.cookieService.set('accessToken', res.accessToken);
         this.router.navigate(['/home']);
       },
       error: (err: HttpErrorResponse) => {
