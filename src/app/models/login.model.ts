@@ -5,4 +5,5 @@ export interface ILogin {
 
 export interface OLogin {
   userId: string;
+  accessToken: string;
 }
